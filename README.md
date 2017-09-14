@@ -1,3 +1,7 @@
+https://www.freecodecamp.org/challenges/show-the-local-weather
+
+Working demo: https://tberghuis.github.io/fcc-weather/
+
 
 User Story: I can see the weather in my current location.
 
