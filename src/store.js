@@ -18,26 +18,24 @@ const mutations = {
   }
 };
 
+
+// should action functions return promise?
+
 const actions = {
-  setLocation({ commit }) {
+  setLocationFromCurrentPosition({ commit }) {
     // all methods to deal with error state first
     if (!navigator.geolocation) {
       // commit location:null ?
       return;
     }
-
     navigator.geolocation.getCurrentPosition(function(position) {
-
         commit('setLocation',{lat:position.coords.latitude,lon:position.coords.longitude});
     });
+  },
+  fetchWeatherData({ commit, state }) {
+    // assume state data is good
 
-
-    // return new Promise((resolve, reject) => {
-    //   setTimeout(() => {
-    //     commit('increment')
-    //     resolve()
-    //   }, 1000)
-    // })
+    
   }
 };
 
