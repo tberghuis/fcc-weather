@@ -1,6 +1,8 @@
 <template>
   <div>
     weather app
+    <div>tempC: {{tempC}}</div>
+    <div>tempF: {{tempF}}</div>
   </div>
 </template>
 
@@ -12,12 +14,25 @@ export default {
     return {
     }
   },
-  computed: mapGetters([
-
-  ]),
+  computed: {
+    tempC() {
+      return this.$store.state.tempC;
+    },
+    tempF() {
+      return this.$store.state.tempF;
+    }
+  },
   methods: mapActions([
 
-  ])
+  ]),
+  created: function() {
+    // dispatch here
+    this.$store.dispatch('setLocationFromCurrentPosition').then(() => {
+      this.$store.dispatch('fetchWeatherData');
+    });
+
+  }
+
 }
 </script>
 

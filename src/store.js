@@ -1,10 +1,13 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import axios from "axios";
 
 Vue.use(Vuex);
 
 const state = {
-  location: null
+  location: null,
+  tempC: null,
+  tempF: null
 };
 
 // location
@@ -18,7 +21,6 @@ const mutations = {
   }
 };
 
-
 // should action functions return promise?
 
 const actions = {
@@ -28,14 +30,37 @@ const actions = {
       // commit location:null ?
       return;
     }
-    navigator.geolocation.getCurrentPosition(function(position) {
-        commit('setLocation',{lat:position.coords.latitude,lon:position.coords.longitude});
+
+    // this allows to chain for once location is set
+    return new Promise(resolve => {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        commit("setLocation", {
+          lat: position.coords.latitude,
+          lon: position.coords.longitude
+        });
+        resolve();
+      });
     });
   },
   fetchWeatherData({ commit, state }) {
     // assume state data is good
 
-    
+    // TODO
+    axios
+      .get(
+        `https://fcc-weather-api.glitch.me/api/current?lat=${state.location
+          .lat}&lon=${state.location.lon}`
+      )
+      .then(res => {
+        console.log("res", res);
+
+        state.tempC = res.data.main.temp;
+
+        // calc tempF
+      })
+      .catch(err => {
+        console.log("err", err);
+      });
   }
 };
 
