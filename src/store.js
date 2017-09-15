@@ -7,7 +7,9 @@ Vue.use(Vuex);
 const state = {
   location: null,
   tempC: null,
-  tempF: null
+  tempF: null,
+  description: null,
+  locationName: null
 };
 
 // location
@@ -18,6 +20,13 @@ const state = {
 const mutations = {
   setLocation(state, { lat, lon }) {
     state.location = { lat, lon };
+  },
+  // i should use an each function to set incoming properties
+  setWeather(state, { tempC, tempF, description, locationName }) {
+    state.tempC = tempC;
+    state.tempF = tempF;
+    state.description = description;
+    state.locationName = locationName;
   }
 };
 
@@ -54,9 +63,15 @@ const actions = {
       .then(res => {
         console.log("res", res);
 
-        state.tempC = res.data.main.temp;
+        // I should not be setting state in action
 
-        // calc tempF
+        let tempC, tempF, description, locationName;
+
+        tempC = res.data.main.temp;
+        tempF = res.data.main.temp * 1.8 + 32;
+        description = res.data.weather[0].description;
+        locationName = res.data.name + ", " + res.data.sys.country;
+        commit("setWeather", { tempC, tempF, description, locationName });
       })
       .catch(err => {
         console.log("err", err);

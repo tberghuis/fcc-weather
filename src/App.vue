@@ -1,8 +1,10 @@
 <template>
   <div>
     weather app
+    <div>{{locationName}}</div>
     <div>tempC: {{tempC}}</div>
     <div>tempF: {{tempF}}</div>
+    <div>{{description}}</div>
   </div>
 </template>
 
@@ -16,10 +18,16 @@ export default {
   },
   computed: {
     tempC() {
-      return this.$store.state.tempC;
+      return Math.round(this.$store.state.tempC);
     },
     tempF() {
-      return this.$store.state.tempF;
+      return Math.round(this.$store.state.tempF);
+    },
+    description() {
+      return this.$store.state.description;
+    },
+    locationName() {
+      return this.$store.state.locationName;
     }
   },
   methods: mapActions([
