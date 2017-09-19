@@ -1,6 +1,6 @@
 <template>
   <div>
-    weather app<br> add location input <br> 
+    <add-city></add-city>
     <weather-card :key="i" v-for="(data,i) in weatherCardData" :data="data"></weather-card>
   </div>
 </template>
@@ -8,11 +8,13 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import WeatherCard from './components/WeatherCard.vue';
+import AddCity from './components/AddCity.vue';
 
 export default {
 
   components: {
-    'weather-card': WeatherCard
+    'weather-card': WeatherCard,
+    'add-city': AddCity
   },
   data() {
     return {

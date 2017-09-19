@@ -4,22 +4,9 @@ import axios from "axios";
 
 Vue.use(Vuex);
 
-// const state = {
-//   location: null,
-//   tempC: null,
-//   tempF: null,
-//   description: null,
-//   locationName: null
-// };
-
 const state = {
   weatherCardData: []
 };
-
-// location
-//     lat
-//     long
-//     name
 
 const mutations = {
 
@@ -29,18 +16,6 @@ const mutations = {
 
 };
 
-// const mutations = {
-//   setLocation(state, { lat, lon }) {
-//     state.location = { lat, lon };
-//   },
-//   // i should use an each function to set incoming properties
-//   setWeather(state, { tempC, tempF, description, locationName }) {
-//     state.tempC = tempC;
-//     state.tempF = tempF;
-//     state.description = description;
-//     state.locationName = locationName;
-//   }
-// };
 
 const actions = {
   addCurrentLocation({ commit }, location) {
