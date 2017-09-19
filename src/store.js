@@ -4,12 +4,16 @@ import axios from "axios";
 
 Vue.use(Vuex);
 
+// const state = {
+//   location: null,
+//   tempC: null,
+//   tempF: null,
+//   description: null,
+//   locationName: null
+// };
+
 const state = {
-  location: null,
-  tempC: null,
-  tempF: null,
-  description: null,
-  locationName: null
+  weatherCardData: []
 };
 
 // location
@@ -18,60 +22,68 @@ const state = {
 //     name
 
 const mutations = {
-  setLocation(state, { lat, lon }) {
-    state.location = { lat, lon };
-  },
-  // i should use an each function to set incoming properties
-  setWeather(state, { tempC, tempF, description, locationName }) {
-    state.tempC = tempC;
-    state.tempF = tempF;
-    state.description = description;
-    state.locationName = locationName;
+
+  addWeatherCard(state, weatherCard) {
+    state.weatherCardData.push(weatherCard);
   }
+
 };
 
-// should action functions return promise?
+// const mutations = {
+//   setLocation(state, { lat, lon }) {
+//     state.location = { lat, lon };
+//   },
+//   // i should use an each function to set incoming properties
+//   setWeather(state, { tempC, tempF, description, locationName }) {
+//     state.tempC = tempC;
+//     state.tempF = tempF;
+//     state.description = description;
+//     state.locationName = locationName;
+//   }
+// };
 
 const actions = {
-  setLocationFromCurrentPosition({ commit }) {
-    // all methods to deal with error state first
-    if (!navigator.geolocation) {
-      // commit location:null ?
-      return;
-    }
+  addCurrentLocation({ commit }, location) {
+    // { locationName, lon, lat, tempC, description }
+    let weatherCard = {};
 
-    // this allows to chain for once location is set
-    return new Promise(resolve => {
-      navigator.geolocation.getCurrentPosition(function(position) {
-        commit("setLocation", {
-          lat: position.coords.latitude,
-          lon: position.coords.longitude
-        });
-        resolve();
-      });
-    });
-  },
-  fetchWeatherData({ commit, state }) {
-    // assume state data is good
-
-    // TODO
+    // fetch locationName
     axios
       .get(
-        `https://fcc-weather-api.glitch.me/api/current?lat=${state.location
-          .lat}&lon=${state.location.lon}`
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${location.lat},${location.lon}&key=AIzaSyB-BiB3pqjmXqtWF8UR9Fb3yq8H0vtSa_8`
       )
       .then(res => {
-        console.log("res", res);
+        // should refactor into seperate function
+        let locality, state, country;
+        res.data.results.forEach(result => {
+          result.address_components.forEach(ac => {
+            ac.types.forEach(type => {
+              if (type === "locality") {
+                locality = ac.long_name;
+              } else if (type === "administrative_area_level_1") {
+                state = ac.short_name;
+              } else if (type === "country") {
+                country = ac.long_name;
+              }
+            });
+          });
+        });
+        // console.log("location", locality, state, country);
+        weatherCard.locationName = `${locality}, ${state}, ${country}`;
+        weatherCard.lat = location.lat;
+        weatherCard.lon = location.lon;
+        // fetch weather Data
+        return axios.get(
+          `https://fcc-weather-api.glitch.me/api/current?lat=${location.lat}&lon=${location.lon}`
+        );
+      })
+      .then(res => {
+        // console.log("res", res);
+        weatherCard.tempC = res.data.main.temp;
+        weatherCard.description = res.data.weather[0].description;
 
-        // I should not be setting state in action
-
-        let tempC, tempF, description, locationName;
-
-        tempC = res.data.main.temp;
-        tempF = res.data.main.temp * 1.8 + 32;
-        description = res.data.weather[0].description;
-        locationName = res.data.name + ", " + res.data.sys.country;
-        commit("setWeather", { tempC, tempF, description, locationName });
+        // commit addWeatherCard
+        commit('addWeatherCard',weatherCard);
       })
       .catch(err => {
         console.log("err", err);
@@ -79,11 +91,13 @@ const actions = {
   }
 };
 
-const getters = {};
+
+// const getters = {
+// };
 
 export default new Vuex.Store({
   state,
-  getters,
+  //getters,
   actions,
   mutations
 });
