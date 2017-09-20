@@ -10,7 +10,7 @@
       <toggle-button :color="{checked: '#3f5163', unchecked: '#3f5163'}" @input="tempUnitChange" /> &deg;F
     </div>
     <b-row>
-      <weather-card :key="i" v-for="(data,i) in weatherCardData" :data="data"></weather-card>
+      <weather-card :key="weatherCardData.length-i-1" v-for="(data,i) in weatherCardData" :data="data"></weather-card>
     </b-row>
   </b-container>
 </template>
@@ -32,7 +32,7 @@ export default {
   },
   computed: {
     weatherCardData() {
-      return this.$store.state.weatherCardData.reverse();
+      return this.$store.state.weatherCardData.slice().reverse();
     }
   },
   methods: {
