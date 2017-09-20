@@ -1,13 +1,18 @@
 <template>
-  <div>
+  <b-container>
+    <h1>
+      <a target="_blank" href="https://github.com/tberghuis/fcc-weather">
+        <i class="fa fa-github" aria-hidden="true"></i>
+      </a> freeCodeCamp - Weather App</h1>
     <add-city></add-city>
     <div>
-      &deg;C <toggle-button
-      :color="{checked: '#3f5163', unchecked: '#3f5163'}"
-      @input="tempUnitChange"/> &deg;F
+      <br> &deg;C
+      <toggle-button :color="{checked: '#3f5163', unchecked: '#3f5163'}" @input="tempUnitChange" /> &deg;F
     </div>
-    <weather-card :key="i" v-for="(data,i) in weatherCardData" :data="data"></weather-card>
-  </div>
+    <b-row>
+      <weather-card :key="i" v-for="(data,i) in weatherCardData" :data="data"></weather-card>
+    </b-row>
+  </b-container>
 </template>
 
 <script>
@@ -30,13 +35,13 @@ export default {
       return this.$store.state.weatherCardData.reverse();
     }
   },
-  methods:{
-    tempUnitChange(tempUnitF){
-      console.log('tempUnitF',tempUnitF);
-      if(tempUnitF){
+  methods: {
+    tempUnitChange(tempUnitF) {
+      console.log('tempUnitF', tempUnitF);
+      if (tempUnitF) {
         this.setTempUnit('F');
       }
-      else{
+      else {
         this.setTempUnit('C');
       }
     },
@@ -82,4 +87,15 @@ function getCurrentPosition() {
 
 <style lang="scss">
 
+h1 {
+  margin-top: 50px;
+  margin-bottom: 15px;
+  a {
+    color: black;
+  }
+}
+
+body {
+  background-color: #e4e4db;
+}
 </style>

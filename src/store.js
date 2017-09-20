@@ -9,12 +9,8 @@ const state = {
   tempUnit: "C"
 };
 
-// var nextIconID = 0;
-
 const mutations = {
   addWeatherCard(state, weatherCard) {
-    // nextIconID++;
-    // weatherCard.iconId = `skycon-${nextIconID}`;
     state.weatherCardData.push(weatherCard);
   },
   setTempUnit(state, tempUnit) {
@@ -47,11 +43,7 @@ const actions = {
         `https://fcc-weather-api.glitch.me/api/current?lat=${latitude}&lon=${longitude}`
       )
       .then(res => {
-
         populateWeatherCard(weatherCard,res.data);
-
-        // weatherCard.tempC = res.data.main.temp;
-        // weatherCard.description = res.data.weather[0].description;
         commit("addWeatherCard", weatherCard);
       })
       .catch(err => {
@@ -84,7 +76,7 @@ const actions = {
         });
 
         // set tempUnit to F if US
-        // put in separate action
+        // TODO put in separate action
         // if(country==="United States"){
         //   commit('setTempUnit','F');
         // }

@@ -5,11 +5,8 @@
     </button>
     <div class="card-body">
       <div>{{data.locationName}}</div>
-      <!-- <canvas 
-        :id="data.iconId"
-         width="50" height="50"></canvas> -->
       <img :src="data.icon">
-      <div>{{tempDisplay}}</div>
+      <div class="temp">{{tempDisplay}}</div>
       <div>{{data.description}}</div>
     </div>
   </div>
@@ -35,19 +32,18 @@ export default {
     }
   },
   methods: {
-
     ...mapMutations([
       'removeWeatherCard'
     ])
   }
-
-
 }
 </script>
 
 <style lang="scss" scoped>
 .card {
   position: relative;
+  margin: 15px;
+  background-color: #d2d2d2;
 }
 
 .close {
@@ -55,4 +51,18 @@ export default {
   right: 10px;
   position: absolute;
 }
+
+img {
+  width: 50px;
+  height: 50px;
+}
+
+.card-body {
+  text-align: center;
+}
+
+.temp {
+  font-size: 2rem;
+}
+
 </style>
