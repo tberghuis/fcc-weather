@@ -46,15 +46,17 @@ export default {
   },
   created: function() {
 
-    // add ney york
+    // add new york
+    this.$store.dispatch('addLocationFromCoordinates', { lat: 40.730610, lon: -73.935242 });
 
     // add london
+    this.$store.dispatch('addLocationFromCoordinates', { lat: 51.508530, lon: -0.076132 });
 
     // add current position
     let promise = getCurrentPosition();
     if (promise) {
       promise.then((currentPosition) => {
-        this.$store.dispatch('addCurrentLocation', currentPosition);
+        this.$store.dispatch('addLocationFromCoordinates', currentPosition);
       });
     }
   }

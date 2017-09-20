@@ -59,7 +59,7 @@ const actions = {
       });
   },
 
-  addCurrentLocation({ commit }, location) {
+  addLocationFromCoordinates({ commit }, location) {
     let weatherCard = {};
     // fetch locationName
     axios
@@ -84,9 +84,10 @@ const actions = {
         });
 
         // set tempUnit to F if US
-        if(country==="United States"){
-          commit('setTempUnit','F');
-        }
+        // put in separate action
+        // if(country==="United States"){
+        //   commit('setTempUnit','F');
+        // }
 
         weatherCard.locationName = `${locality}, ${state}, ${country}`;
         weatherCard.lat = location.lat;
