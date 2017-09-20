@@ -5,19 +5,49 @@ import axios from "axios";
 Vue.use(Vuex);
 
 const state = {
-  weatherCardData: []
+  weatherCardData: [],
+  tempUnit: "C"
 };
 
 const mutations = {
-
   addWeatherCard(state, weatherCard) {
     state.weatherCardData.push(weatherCard);
+  },
+  setTempUnit(state, tempUnit) {
+    state.tempUnit = tempUnit;
+  },
+  removeWeatherCard(state, card){
+    state.weatherCardData.splice(state.weatherCardData.indexOf(card), 1);
   }
-
 };
 
-
 const actions = {
+  addLocation({ commit }, location) {
+    console.log("location", location);
+    let { locality, administrative_area_level_1, country } = location;
+    let { latitude, longitude } = location;
+    let weatherCard = {};
+    weatherCard.locationName = `${locality}, ${administrative_area_level_1}, ${country}`;
+    weatherCard.lat = latitude;
+    weatherCard.lon = longitude;
+
+    axios
+      .get(
+        `https://fcc-weather-api.glitch.me/api/current?lat=${latitude}&lon=${longitude}`
+      )
+      .then(res => {
+        // console.log("res", res);
+        weatherCard.tempC = res.data.main.temp;
+        weatherCard.description = res.data.weather[0].description;
+
+        // commit addWeatherCard
+        commit("addWeatherCard", weatherCard);
+      })
+      .catch(err => {
+        console.log("err", err);
+      });
+  },
+
   addCurrentLocation({ commit }, location) {
     // { locationName, lon, lat, tempC, description }
     let weatherCard = {};
@@ -58,14 +88,13 @@ const actions = {
         weatherCard.description = res.data.weather[0].description;
 
         // commit addWeatherCard
-        commit('addWeatherCard',weatherCard);
+        commit("addWeatherCard", weatherCard);
       })
       .catch(err => {
         console.log("err", err);
       });
   }
 };
-
 
 // const getters = {
 // };
