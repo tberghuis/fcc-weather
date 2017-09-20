@@ -9,8 +9,12 @@ const state = {
   tempUnit: "C"
 };
 
+// var nextIconID = 0;
+
 const mutations = {
   addWeatherCard(state, weatherCard) {
+    // nextIconID++;
+    // weatherCard.iconId = `skycon-${nextIconID}`;
     state.weatherCardData.push(weatherCard);
   },
   setTempUnit(state, tempUnit) {
@@ -20,6 +24,13 @@ const mutations = {
     state.weatherCardData.splice(state.weatherCardData.indexOf(card), 1);
   }
 };
+
+function populateWeatherCard(weatherCard,responseData){
+  console.log('responseData',responseData);
+  weatherCard.tempC = responseData.main.temp;
+  weatherCard.description = responseData.weather[0].description;
+  weatherCard.icon = responseData.weather[0].icon;
+}
 
 const actions = {
   addLocation({ commit }, location) {
@@ -36,11 +47,11 @@ const actions = {
         `https://fcc-weather-api.glitch.me/api/current?lat=${latitude}&lon=${longitude}`
       )
       .then(res => {
-        // console.log("res", res);
-        weatherCard.tempC = res.data.main.temp;
-        weatherCard.description = res.data.weather[0].description;
 
-        // commit addWeatherCard
+        populateWeatherCard(weatherCard,res.data);
+
+        // weatherCard.tempC = res.data.main.temp;
+        // weatherCard.description = res.data.weather[0].description;
         commit("addWeatherCard", weatherCard);
       })
       .catch(err => {
@@ -49,9 +60,7 @@ const actions = {
   },
 
   addCurrentLocation({ commit }, location) {
-    // { locationName, lon, lat, tempC, description }
     let weatherCard = {};
-
     // fetch locationName
     axios
       .get(
@@ -73,7 +82,12 @@ const actions = {
             });
           });
         });
-        // console.log("location", locality, state, country);
+
+        // set tempUnit to F if US
+        if(country==="United States"){
+          commit('setTempUnit','F');
+        }
+
         weatherCard.locationName = `${locality}, ${state}, ${country}`;
         weatherCard.lat = location.lat;
         weatherCard.lon = location.lon;
@@ -83,11 +97,7 @@ const actions = {
         );
       })
       .then(res => {
-        // console.log("res", res);
-        weatherCard.tempC = res.data.main.temp;
-        weatherCard.description = res.data.weather[0].description;
-
-        // commit addWeatherCard
+        populateWeatherCard(weatherCard,res.data);
         commit("addWeatherCard", weatherCard);
       })
       .catch(err => {

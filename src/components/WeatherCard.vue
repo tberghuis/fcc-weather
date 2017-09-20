@@ -1,12 +1,14 @@
 <template>
   <div class="card">
-    <button 
-    @click="removeWeatherCard(data)"
-    type="button" class="close" aria-label="Close">
+    <button @click="removeWeatherCard(data)" type="button" class="close" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
     <div class="card-body">
       <div>{{data.locationName}}</div>
+      <!-- <canvas 
+        :id="data.iconId"
+         width="50" height="50"></canvas> -->
+      <img :src="data.icon">
       <div>{{tempDisplay}}</div>
       <div>{{data.description}}</div>
     </div>
